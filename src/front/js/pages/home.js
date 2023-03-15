@@ -6,6 +6,7 @@ import "../../styles/home.css";
 export const Home = () => {
   const { store, actions } = useContext(Context);
   const [todos, setTodos] = useState([]);
+
   useEffect(() => {
     const cargaDeDatos = async () => {
       let { respuestaJson, response } = await actions.useFetch(
@@ -45,12 +46,20 @@ export const Home = () => {
         </div>
         <input
           placeholder="What needs to be done?"
-          onKeyDown={(e) => {
-            //event listener
-            if (e.keyCode == "13") {
-              //el 13 significa enter
-              //console.log("Presionaste el enter")
-              setTodos([...todos, { label: e.target.value, done: false }]);
+          onKeyDown={async (e) => {
+            if (e.keyCode === 13) {
+              const newTodo = { label: e.target.value, done: false };
+              const updatedTodos = [...todos, newTodo];
+              setTodos(updatedTodos);
+              const { respuestaJson, response } = await actions.useFetch(
+                "todos/user/jacob",
+                updatedTodos,
+                "PUT"
+              );
+              if (!response.ok) {
+                alert("No se pudo guardar la nueva tarea");
+              }
+              e.target.value = "";
             }
           }}
         />
