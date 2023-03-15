@@ -5,27 +5,36 @@ import "../../styles/home.css";
 
 export const Home = () => {
   const { store, actions } = useContext(Context);
-  const [arregloTemp, setArregloTemp] = useState([]);
+  const [todos, setTodos] = useState([]);
   useEffect(() => {
     const cargaDeDatos = async () => {
       let { respuestaJson, response } = await actions.useFetch(
         "todos/user/jacob"
       );
       if (response.ok) {
-        setArregloTemp(respuestaJson);
+        setTodos(respuestaJson);
       }
     };
     cargaDeDatos();
   }, []);
 
-  useEffect(() => {}, [arregloTemp]);
+  useEffect(() => {}, [todos]);
 
-  const eliminarTarea = (indice) => {
-    setArregloTemp(
-      arregloTemp.filter((item, index) => {
-        return index !== indice;
-      })
+  const eliminarTarea = async (indice) => {
+    let arrTemp = todos.filter((item, index) => {
+      return index !== indice;
+    });
+
+    let { respuestaJson, response } = await actions.useFetch(
+      "todos/user/jacob",
+      arrTemp,
+      "PUT"
     );
+    if (response.ok) {
+      setTodos(arrTemp);
+    } else {
+      alert("No hubo conexión");
+    }
   };
 
   return (
@@ -41,16 +50,13 @@ export const Home = () => {
             if (e.keyCode == "13") {
               //el 13 significa enter
               //console.log("Presionaste el enter")
-              setArregloTemp([
-                ...arregloTemp,
-                { label: e.target.value, done: false },
-              ]);
+              setTodos([...todos, { label: e.target.value, done: false }]);
             }
           }}
         />
-        {arregloTemp && arregloTemp.length > 0 ? (
+        {todos && todos.length > 0 ? (
           <>
-            {arregloTemp.map((item, index) => {
+            {todos.map((item, index) => {
               return (
                 <li
                   key={index}
@@ -75,7 +81,7 @@ export const Home = () => {
             <h1>NO hay tareas</h1>
           </>
         )}
-        <div className="fs-6 border"> {arregloTemp.length} Item left </div>
+        <div className="fs-6 border"> {todos.length} Item left </div>
         <div className="relleno1 shadow fs-6 border"></div>
         <div className="relleno2 shadow fs-6 border"></div>
       </div>
