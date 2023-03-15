@@ -53,9 +53,9 @@ const getState = ({ getStore, getActions, setStore }) => {
           body: body ? JSON.stringify(body) : null,
         });
 
-        let respuestaJson = await response.json();
+        let respuestaJson = await response.json()
 
-        return { respuestaJson, response };
+        return { respuestaJson, response }
       },
     },
   };

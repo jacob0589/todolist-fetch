@@ -5,20 +5,20 @@ import "../../styles/home.css";
 
 export const Home = () => {
   const { store, actions } = useContext(Context);
- const [arregloTemp, setArregloTemp] = useState([]);
- useEffect(() => {
+  const [arregloTemp, setArregloTemp] = useState([]);
+  useEffect(() => {
     const cargaDeDatos = async () => {
-      let { respuestaJson, response } = await actions.useFetch( "todos/user/jacob")
+      let { respuestaJson, response } = await actions.useFetch(
+        "todos/user/jacob"
+      );
       if (response.ok) {
-        setArregloTemp(respuestaJson)
+        setArregloTemp(respuestaJson);
       }
-    }
-    cargaDeDatos()
-  }, [])
+    };
+    cargaDeDatos();
+  }, []);
 
-  useEffect(() => {}, [arregloTemp])
-
-
+  useEffect(() => {}, [arregloTemp]);
 
   const eliminarTarea = (indice) => {
     setArregloTemp(
@@ -28,7 +28,6 @@ export const Home = () => {
     );
   };
 
-  
   return (
     <div className="container-fluid justify-content-center align-item-center ">
       <div className="row d-flex justify-content-center m-5 p-5">
